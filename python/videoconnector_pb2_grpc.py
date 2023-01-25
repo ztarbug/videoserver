@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import videoconnector_pb2 as proto_dot_videoconnector__pb2
+import videoconnector_pb2 as videoconnector__pb2
 
 
 class VideoConnectorStub(object):
@@ -17,18 +17,18 @@ class VideoConnectorStub(object):
         """
         self.GetCommand = channel.unary_unary(
                 '/videoconnector.VideoConnector/GetCommand',
-                request_serializer=proto_dot_videoconnector__pb2.CommandRequest.SerializeToString,
-                response_deserializer=proto_dot_videoconnector__pb2.CommandList.FromString,
+                request_serializer=videoconnector__pb2.CommandRequest.SerializeToString,
+                response_deserializer=videoconnector__pb2.CommandList.FromString,
                 )
         self.DeliverSourceInfo = channel.unary_unary(
                 '/videoconnector.VideoConnector/DeliverSourceInfo',
-                request_serializer=proto_dot_videoconnector__pb2.SourceInfoRequest.SerializeToString,
-                response_deserializer=proto_dot_videoconnector__pb2.ServerAckResponse.FromString,
+                request_serializer=videoconnector__pb2.SourceInfoRequest.SerializeToString,
+                response_deserializer=videoconnector__pb2.ServerAckResponse.FromString,
                 )
         self.TransferImage = channel.unary_unary(
                 '/videoconnector.VideoConnector/TransferImage',
-                request_serializer=proto_dot_videoconnector__pb2.TransferImageRequest.SerializeToString,
-                response_deserializer=proto_dot_videoconnector__pb2.ServerAckResponse.FromString,
+                request_serializer=videoconnector__pb2.TransferImageRequest.SerializeToString,
+                response_deserializer=videoconnector__pb2.ServerAckResponse.FromString,
                 )
 
 
@@ -62,18 +62,18 @@ def add_VideoConnectorServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetCommand': grpc.unary_unary_rpc_method_handler(
                     servicer.GetCommand,
-                    request_deserializer=proto_dot_videoconnector__pb2.CommandRequest.FromString,
-                    response_serializer=proto_dot_videoconnector__pb2.CommandList.SerializeToString,
+                    request_deserializer=videoconnector__pb2.CommandRequest.FromString,
+                    response_serializer=videoconnector__pb2.CommandList.SerializeToString,
             ),
             'DeliverSourceInfo': grpc.unary_unary_rpc_method_handler(
                     servicer.DeliverSourceInfo,
-                    request_deserializer=proto_dot_videoconnector__pb2.SourceInfoRequest.FromString,
-                    response_serializer=proto_dot_videoconnector__pb2.ServerAckResponse.SerializeToString,
+                    request_deserializer=videoconnector__pb2.SourceInfoRequest.FromString,
+                    response_serializer=videoconnector__pb2.ServerAckResponse.SerializeToString,
             ),
             'TransferImage': grpc.unary_unary_rpc_method_handler(
                     servicer.TransferImage,
-                    request_deserializer=proto_dot_videoconnector__pb2.TransferImageRequest.FromString,
-                    response_serializer=proto_dot_videoconnector__pb2.ServerAckResponse.SerializeToString,
+                    request_deserializer=videoconnector__pb2.TransferImageRequest.FromString,
+                    response_serializer=videoconnector__pb2.ServerAckResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -98,8 +98,8 @@ class VideoConnector(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/videoconnector.VideoConnector/GetCommand',
-            proto_dot_videoconnector__pb2.CommandRequest.SerializeToString,
-            proto_dot_videoconnector__pb2.CommandList.FromString,
+            videoconnector__pb2.CommandRequest.SerializeToString,
+            videoconnector__pb2.CommandList.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -115,8 +115,8 @@ class VideoConnector(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/videoconnector.VideoConnector/DeliverSourceInfo',
-            proto_dot_videoconnector__pb2.SourceInfoRequest.SerializeToString,
-            proto_dot_videoconnector__pb2.ServerAckResponse.FromString,
+            videoconnector__pb2.SourceInfoRequest.SerializeToString,
+            videoconnector__pb2.ServerAckResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -132,7 +132,7 @@ class VideoConnector(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/videoconnector.VideoConnector/TransferImage',
-            proto_dot_videoconnector__pb2.TransferImageRequest.SerializeToString,
-            proto_dot_videoconnector__pb2.ServerAckResponse.FromString,
+            videoconnector__pb2.TransferImageRequest.SerializeToString,
+            videoconnector__pb2.ServerAckResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
