@@ -1,21 +1,22 @@
-from concurrent import futures
-from pathlib import Path
-import time
-import logging
-import grpc
-import pprint
+import argparse
 import base64
-
+import logging
+import pprint
+import time
+from concurrent import futures
 from io import BytesIO
-import PIL.Image as Image
-import cv2
-import numpy as np
-
-from google.protobuf.timestamp_pb2 import Timestamp
+from pathlib import Path
+from multiprocessing import Queue
 
 import clientdata
+import cv2
+import grpc
+import numpy as np
+import PIL.Image as Image
 import videoconnector_pb2
 import videoconnector_pb2_grpc
+from google.protobuf.timestamp_pb2 import Timestamp
+
 
 class VideoServer(videoconnector_pb2_grpc.VideoConnectorServicer):
 
@@ -115,4 +116,34 @@ def serve():
 
 if __name__ == '__main__':
     logging.basicConfig()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--image-dir', help='Directory where to look for images to annotate (default: "./images")', default='./images')
+    parser.add_argument('-m', '--model-dir', help='Path to the "saved_model" directory of the model to run (default: a directory starting with "efficientdet_d")')
+    parser.add_argument('-o', '--output-dir', help='Directory where to put annotated images (default: "./annotated_images")', default='./annotated_images')
+    parser.add_argument('-c', '--min-confidence', help='Only include objects if the confidence of detection is higher than this (range 0-100 percent)', default=30, type=int)
+    parser.add_argument('-s', '--model-size', help='Which EfficientDet model size should be downloaded (range [0..7])', default=0, type=int)
+    parser.add_argument('-d', '--download', help='Should the EfficientDet model be automatically downloaded if not found in the provided directory?', default=False, type=bool)
+    args = vars(parser.parse_args())
+
+    if args['model_dir'] is None:
+        SAVED_MODEL_DIR = os.path.join(get_model_dir(model_size=args['model_size'], auto_download=args['download']), 'saved_model')
+    else:
+        SAVED_MODEL_DIR = os.path.join(get_model_dir(model_dir=args['model_dir'], model_size=args['model_size'], auto_download=args['download']), 'saved_model')
+
+    OUTPUT_DIR = args['output_dir']
+    IMAGES = get_images_in_path(args['image_dir'])
+    MIN_SCORE = args['min_confidence']/100
+
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+    eff_det = tf.saved_model.load(SAVED_MODEL_DIR)
+
+    if args.detect_objects:
+        from inferencer import Inferencer
+        infer_queue = Queue()
+        inferencer = Inferencer(infer_queue)
+        inferencer.run()
+    
     serve()
+    inferencer.terminate()

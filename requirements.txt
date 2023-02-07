@@ -4,4 +4,4 @@ pillow
 grpcio
 grpcio-tools==1.48.1
 protobuf
-git+https://github.com/ztarbug/object-detector.git
+git+https://github.com/ztarbug/object-detector.git@feature/auto-download
